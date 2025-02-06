@@ -11,7 +11,7 @@ class G66MaterialTextFormField extends FormField<String> {
   final bool allowClear;
   final TextInputType keyboardType;
 
-  final Color focusBorderColor;
+  final Color? focusBorderColor;
   final Color errorBorderColor;
   final Color normalBorderColor;
 
@@ -30,7 +30,7 @@ class G66MaterialTextFormField extends FormField<String> {
     this.maxLines = 1,
     this.keyboardType = TextInputType.text,
     this.allowClear = false,
-    this.focusBorderColor = Colors.blue,
+    this.focusBorderColor,
     this.errorBorderColor = Colors.red,
     this.normalBorderColor = const Color(0xFFCCCCCC),
 
@@ -39,32 +39,31 @@ class G66MaterialTextFormField extends FormField<String> {
     super.validator,
     super.onSaved,
     super.autovalidateMode = AutovalidateMode.disabled,
-
     this.onChanged,
     this.onLeftIconTap,
     this.onRightIconTap,
   }) : super(
-    builder: (FormFieldState<String> state) {
-      return _G66MaterialTextFormFieldContent(
-        fieldState: state,
-        label: label,
-        placeholder: placeholder,
-        leftIcon: leftIcon,
-        rightIcon: rightIcon,
-        secure: secure,
-        multiline: multiline,
-        maxLines: maxLines,
-        keyboardType: keyboardType,
-        allowClear: allowClear,
-        focusBorderColor: focusBorderColor,
-        errorBorderColor: errorBorderColor,
-        normalBorderColor: normalBorderColor,
-        onChanged: onChanged,
-        onLeftIconTap: onLeftIconTap,
-        onRightIconTap: onRightIconTap,
-      );
-    },
-  );
+          builder: (FormFieldState<String> state) {
+            return _G66MaterialTextFormFieldContent(
+              fieldState: state,
+              label: label,
+              placeholder: placeholder,
+              leftIcon: leftIcon,
+              rightIcon: rightIcon,
+              secure: secure,
+              multiline: multiline,
+              maxLines: maxLines,
+              keyboardType: keyboardType,
+              allowClear: allowClear,
+              focusBorderColor: focusBorderColor,
+              errorBorderColor: errorBorderColor,
+              normalBorderColor: normalBorderColor,
+              onChanged: onChanged,
+              onLeftIconTap: onLeftIconTap,
+              onRightIconTap: onRightIconTap,
+            );
+          },
+        );
 }
 
 class _G66MaterialTextFormFieldContent extends StatefulWidget {
@@ -79,7 +78,7 @@ class _G66MaterialTextFormFieldContent extends StatefulWidget {
   final TextInputType keyboardType;
   final bool allowClear;
 
-  final Color focusBorderColor;
+  final Color? focusBorderColor;
   final Color errorBorderColor;
   final Color normalBorderColor;
 
@@ -98,7 +97,7 @@ class _G66MaterialTextFormFieldContent extends StatefulWidget {
     this.maxLines = 1,
     this.keyboardType = TextInputType.text,
     this.allowClear = false,
-    this.focusBorderColor = Colors.blue,
+    this.focusBorderColor,
     this.errorBorderColor = Colors.red,
     this.normalBorderColor = const Color(0xFFCCCCCC),
     this.onChanged,
@@ -141,13 +140,15 @@ class __G66MaterialTextFormFieldContentState
     });
 
     if (!_isFocused) {
-      widget.fieldState.validate();  // Valida al perder el foco
+      widget.fieldState.validate(); // Valida al perder el foco
+    } else {
+      widget.fieldState.reset();
     }
   }
 
   void _clearText() {
     _controller.clear();
-    widget.fieldState.didChange('');  // Actualiza el estado del formulario
+    widget.fieldState.didChange(''); // Actualiza el estado del formulario
     widget.onChanged?.call('');
   }
 
@@ -159,12 +160,14 @@ class __G66MaterialTextFormFieldContentState
 
   @override
   Widget build(BuildContext context) {
+    final focusBorderColorCalculated =
+        widget.focusBorderColor ?? Theme.of(context).primaryColor;
     final hasError = widget.fieldState.hasError;
-    final borderColor = hasError
+    final mainColor = hasError
         ? widget.errorBorderColor
         : _isFocused
-        ? widget.focusBorderColor
-        : widget.normalBorderColor;
+            ? focusBorderColorCalculated
+            : widget.normalBorderColor;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +175,7 @@ class __G66MaterialTextFormFieldContentState
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: borderColor, width: 1.5),
+            border: Border.all(color: mainColor, width: 1.5),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
@@ -180,8 +183,7 @@ class __G66MaterialTextFormFieldContentState
               if (widget.leftIcon != null)
                 GestureDetector(
                   onTap: widget.onLeftIconTap,
-                  child: Icon(widget.leftIcon,
-                      color: Colors.grey),
+                  child: Icon(widget.leftIcon, color: Colors.grey),
                 ),
               Expanded(
                 child: TextField(
@@ -189,10 +191,19 @@ class __G66MaterialTextFormFieldContentState
                   focusNode: _focusNode,
                   obscureText: _obscureText,
                   maxLines: widget.multiline ? widget.maxLines : 1,
+                  autocorrect: false,
                   decoration: InputDecoration(
                     hintText: widget.placeholder,
+                    hintStyle: TextStyle(
+                        color: hasError
+                            ? Theme.of(context).colorScheme.error
+                            : Theme.of(context).primaryColor),
                     border: InputBorder.none,
-                    labelText: widget.label
+                    labelText: widget.label,
+                    labelStyle: TextStyle(
+                        color: hasError
+                            ? Theme.of(context).colorScheme.error
+                            : mainColor),
                   ),
                   keyboardType: widget.keyboardType,
                   onChanged: (value) {
@@ -227,7 +238,7 @@ class __G66MaterialTextFormFieldContentState
             padding: const EdgeInsets.only(top: 4.0),
             child: Text(
               widget.fieldState.errorText ?? '',
-              style: const TextStyle(color: Colors.red, fontSize: 12),
+              style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12),
             ),
           ),
       ],
