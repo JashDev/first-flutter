@@ -89,15 +89,12 @@ class _G66MaterialButtonState extends State<G66MaterialButton> {
       height: _getButtonHeight(),
       child: OutlinedButton(
         onPressed: widget.isEnabled ? _handleTap : null,
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: widget.isEnabled ? Colors.blue : Colors.grey),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: _getPadding(),
-          foregroundColor:
-              widget.isEnabled ? Colors.blue : Colors.grey, // Color del texto
-        ),
+        style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+            padding: WidgetStatePropertyAll(_getPadding()),
+            side: WidgetStatePropertyAll(BorderSide(
+                color: widget.isEnabled
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).disabledColor))),
         child:
             _buildButtonContent(widget.isEnabled ? Colors.blue : Colors.grey),
       ),
@@ -110,15 +107,9 @@ class _G66MaterialButtonState extends State<G66MaterialButton> {
       height: _getButtonHeight(),
       child: TextButton(
         onPressed: widget.isEnabled ? _handleTap : null,
-        style: TextButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: _getPadding(),
-          foregroundColor: widget.isEnabled
-              ? Colors.blue
-              : Colors.grey, // Color del texto deshabilitado
-        ),
+        style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+              padding: WidgetStatePropertyAll(_getPadding()),
+            ),
         child:
             _buildButtonContent(widget.isEnabled ? Colors.blue : Colors.grey),
       ),
@@ -131,13 +122,9 @@ class _G66MaterialButtonState extends State<G66MaterialButton> {
       height: _getButtonHeight(),
       child: ElevatedButton(
         onPressed: widget.isEnabled ? _handleTap : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _getButtonColor(),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: _getPadding(),
-        ),
+        style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+              padding: WidgetStatePropertyAll(_getPadding()),
+            ),
         child: _buildButtonContent(Colors.white),
       ),
     );
@@ -178,22 +165,6 @@ class _G66MaterialButtonState extends State<G66MaterialButton> {
           Icon(widget.icon, color: textColor),
       ],
     );
-  }
-
-  Color _getButtonColor() {
-    if (!widget.isEnabled) {
-      return Colors.grey.shade400;
-    }
-
-    switch (widget.type) {
-      case ButtonType.primary:
-        return Color(0xFF3f5edf);
-      case ButtonType.outline:
-      case ButtonType.ghost:
-        return Colors.transparent;
-      case ButtonType.success:
-        return Colors.green;
-    }
   }
 
   double _getButtonHeight() {

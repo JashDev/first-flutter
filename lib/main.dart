@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_example/core/config/service_locator.dart';
+import 'package:login_example/core/theme/app_theme.dart';
 import 'package:login_example/features/auth/presentation/login_bloc.dart';
 import 'core/app_router.dart';
 import 'core/config/environment_config.dart';
@@ -33,19 +34,17 @@ class BlocProviders extends StatelessWidget {
 
 class MyApp extends StatelessWidget {
   final navigatorKey = getIt<GlobalKey<NavigatorState>>();
+
   MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Login Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: AppRoutes.splash,
-      onGenerateRoute: AppRouter.generateRoute,
+      themeMode: ThemeMode.light,
+      theme: AppTheme.light,
+      routerConfig: router,
     );
   }
 }
