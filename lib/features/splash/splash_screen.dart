@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/app_router.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,8 +18,8 @@ class SplashScreenState extends State<SplashScreen> {
 
   void _navigateToLogin() async {
     await Future.delayed(const Duration(seconds: 3)); // Simula la carga
-    if (mounted) {  // Verificamos que el widget sigue montado
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    if (mounted) {
+      context.goNamed('login');
     }
   }
 

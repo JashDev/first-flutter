@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:login_example/core/widgets/lottie_view.dart';
 
 class Loader {
   static final Loader _instance = Loader._internal();
@@ -25,9 +26,7 @@ class Loader {
     _overlayEntry = OverlayEntry(
       builder: (_) => Container(
         color: Colors.black.withAlpha(125),
-        child: const Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
+        child: LottieView(lottiePath: 'assets/lottie/preloader_white.json')
       ),
     );
 
