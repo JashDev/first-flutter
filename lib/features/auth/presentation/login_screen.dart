@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:login_example/features/auth/presentation/login_bloc.dart';
+import 'package:login_example/features/auth/presentation/blocs/login/login_bloc.dart';
 import 'package:login_example/features/shared/widgets/g66_material_button.dart';
 import 'package:login_example/features/shared/widgets/g66_material_text_form_field.dart';
 
@@ -27,14 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final loginBloc = context.watch<LoginBloc>();
 
-    // if (loginBloc.state is LoginLoading) {
-    //   Loader().show(context);
-    // }
-
-    // if (loginBloc.state is LoginFailure || loginBloc.state is LoginSuccess) {
-    //   Loader().hide();
-    // }
-
     return Scaffold(
       backgroundColor: const Color(0xFFF7F9FC),
       body: SafeArea(
@@ -54,19 +46,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 40,
-                  backgroundColor: Color(0xFF2746C7),
-                  child: Icon(Icons.waves, size: 40, color: Colors.white),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: Image.asset('assets/images/logo_circle.png'),
                 ),
                 const SizedBox(height: 20),
                 Text(
                   '¡Te damos la bienvenida a Global66!',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF3f5edf),
-                  ),
+                  style: Theme.of(context).textTheme.displayMedium,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
