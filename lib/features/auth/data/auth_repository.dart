@@ -1,8 +1,15 @@
-import '../../../core/contants.dart';
+import 'package:flutter/material.dart';
+import 'package:login_example/features/auth/data/auth_service.dart';
+import 'package:login_example/features/auth/data/models/sign_in_dto.dart';
 
 class AuthRepository {
-  Future<bool> login(String email, String password) async {
-    await Future.delayed(const Duration(seconds: 2)); // Simula una llamada a API
-    return email == Constants.validEmail && password == Constants.validPassword;
+  final _authService = AuthService();
+
+  Future<bool> login({required SignInDto signInDto}) async {
+    final response = await _authService.signIn(signInDto);
+
+    debugPrint(response.toString());
+
+    return false;
   }
 }

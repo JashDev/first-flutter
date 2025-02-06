@@ -187,7 +187,7 @@ class _G66MaterialButtonState extends State<G66MaterialButton> {
 
     switch (widget.type) {
       case ButtonType.primary:
-        return Colors.blue;
+        return Color(0xFF3f5edf);
       case ButtonType.outline:
       case ButtonType.ghost:
         return Colors.transparent;

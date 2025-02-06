@@ -1,150 +1,213 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login_example/features/auth/presentation/login_bloc.dart';
 import 'package:login_example/features/shared/widgets/g66_material_button.dart';
-import '../../shared/widgets/g66_material_text_input.dart';
-import '../data/auth_repository.dart';
-import '../domain/login_usercase.dart';
-import 'login_bloc.dart';
-import 'login_event.dart';
-import 'login_state.dart';
+import 'package:login_example/features/shared/widgets/g66_material_text_form_field.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => LoginBloc(loginUseCase: LoginUseCase(AuthRepository())),
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Iniciar Sesión')),
-        body: const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: LoginForm(),
-        ),
-      ),
-    );
-  }
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
-
-  @override
-  LoginFormState createState() => LoginFormState();
-}
-
-class LoginFormState extends State<LoginForm> {
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
   bool _isFormValid = false;
 
-  void _validateForm(isValid) {
+  void _validateForm() {
     setState(() {
-      _isFormValid = isValid;
+      _isFormValid = _formKey.currentState?.validate() ?? false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state is LoginSuccess) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const HomeScreen()),
-          );
-        } else if (state is LoginFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error)),
-          );
-        }
-      },
-      child: BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Campo de Correo Electrónico
-            G66MaterialTextInput(
-              label: 'Correo Electrónico',
-              placeholder: 'Introduce tu correo',
-              required: true,
-              validateOnType: true,
-              customValidators: [
-                (value) async {
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                      .hasMatch(value)) {
-                    return CustomValidatorResponse(status: ValidationStatus.error, message: 'Correo invalido');
-                  }
-                  return null;
-                },
-              ],
-              onChanged: (value) {
-                _email = value;
-              },
-              onValidated: (value) {
-                _validateForm(value);
-              },
-            ),
-            const SizedBox(height: 16),
+    final loginBloc = context.watch<LoginBloc>();
 
-            // Campo de Contraseña
-            G66MaterialTextInput(
-              label: 'Contraseña',
-              placeholder: 'Introduce tu contraseña',
-              rightIcon: Icons.visibility_off,
-              secure: true,
-              required: true,
-              validateOnType: true,
-              customValidators: [
-                (value) async {
-                  if (value.length < 6) {
-                    return CustomValidatorResponse(status: ValidationStatus.error, message: 'La contraseña debe tener al menos 6 caracteres');
-                  }
-                  return null;
-                },
-              ],
-              onChanged: (value) {
-                _password = value;
-              },
-              onValidated: (value) {
-                _validateForm(value);
-              },
-            ),
-            const SizedBox(height: 24),
+    // if (loginBloc.state is LoginLoading) {
+    //   Loader().show(context);
+    // }
 
-            // Botón de Iniciar Sesión
-            G66MaterialButton(
-              text: 'Iniciar Sesión',
-              isEnabled: _isFormValid,
-              isLoading: state is LoginLoading,
-              onPressed: () {
-                print('email $_email, password $_password');
-                if (!_isFormValid) return;
-                context.read<LoginBloc>().add(
-                      LoginButtonPressed(
-                        email: _email,
-                        password: _password,
-                      ),
-                    );
-              },
-              fullWidth: true,
-            )
-          ],
-        );
-      }),
+    // if (loginBloc.state is LoginFailure || loginBloc.state is LoginSuccess) {
+    //   Loader().hide();
+    // }
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7F9FC),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 40),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios,
+                        color: Color(0xFF6A6FBA)),
+                    onPressed: () {},
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Color(0xFF2746C7),
+                  child: Icon(Icons.waves, size: 40, color: Colors.white),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  '¡Te damos la bienvenida a Global66!',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF3f5edf),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 30),
+                Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      children: [
+                        G66MaterialTextFormField(
+                          label: 'Email',
+                          initialValue: _email,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Este campo es obligatorio';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            _validateForm();
+                            setState(() {
+                              _email = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        G66MaterialTextFormField(
+                            label: 'Contraseña',
+                            secure: true,
+                            initialValue: _password,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Este campo es obligatorio';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              _validateForm();
+                              setState(() {
+                                _password = value;
+                              });
+                            }),
+                      ],
+                    )),
+                const SizedBox(height: 30),
+                // BlocBuilder<LoginBloc, LoginState>(
+                //   builder: (context, state) {
+                //     return G66MaterialButton(
+                //       text: 'Iniciar Sesión',
+                //       fullWidth: true,
+                //       isEnabled: _isFormValid,
+                //       isLoading: state is LoginLoading,
+                //       onPressed: () {
+                //         loginBloc.add(LoginButtonPressed(
+                //             email: _email, password: _password));
+                //       },
+                //     );
+                //   },
+                // ),
+                G66MaterialButton(
+                  text: 'Iniciar Sesión',
+                  fullWidth: true,
+                  isEnabled: _isFormValid,
+                  onPressed: () {
+                    loginBloc.login(email: _email, password: _password);
+                  },
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'O CONTINUAR CON',
+                  style: TextStyle(
+                      color: Color(0xFF4A4E69),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _socialButton(Icons.facebook, Colors.blue),
+                    _socialButton(Icons.g_mobiledata, Colors.red),
+                    _socialButton(Icons.apple, Colors.black),
+                  ],
+                ),
+                const SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(' ¿Aún no tienes cuenta?',
+                        style:
+                            TextStyle(color: Color(0xFF4A4E69), fontSize: 11)),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () {
+                        debugPrint('ir a crear cueta');
+                      },
+                      child: Text('Crear cuenta',
+                          style: TextStyle(
+                              color: Color(0xFF2746C7),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('¿Olvidaste tu contraseña?',
+                        style:
+                            TextStyle(color: Color(0xFF4A4E69), fontSize: 11)),
+                    SizedBox(width: 8),
+                    Text('Recuperar contraseña',
+                        style: TextStyle(
+                            color: Color(0xFF2746C7),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
-}
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: const Center(
-        child: Text('¡Bienvenido a la aplicación!'),
+  Widget _socialButton(IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(25),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
+      child: Icon(icon, color: color, size: 30),
     );
   }
 }
