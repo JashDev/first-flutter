@@ -70,7 +70,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (value == null || value.isEmpty) {
                               return 'Este campo es obligatorio';
                             }
-                            return null;
+                            final RegExp emailRegex = RegExp(
+                              r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
+                            );
+                            return emailRegex.hasMatch(value)
+                                ? null
+                                : 'El email no es válido';
                           },
                           onChanged: (value) {
                             _validateForm();
