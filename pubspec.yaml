@@ -73,6 +73,7 @@ flutter:
     - .env.dev
     - .env.prod
     - assets/lottie/preloader_white.json
+    - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

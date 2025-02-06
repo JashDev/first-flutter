@@ -6,7 +6,7 @@ class AppColors {
   static const Color primaryVariant = Color(0xFF3700B3);
   static const Color secondary = Color(0xFF03DAC6);
 
-  static Color disabledColor =  Colors.grey.shade400;
+  static Color disabledColor =  Colors.grey.shade300;
 
   // Colores neutrales
   static const Color background = Color(0xFFF5F5F5);

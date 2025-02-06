@@ -4,18 +4,24 @@ import 'text_styles.dart';
 
 final ThemeData g66LightTheme = ThemeData(
     useMaterial3: true,
+    primaryColor: AppColors.primary,
+    focusColor: AppColors.primary,
+
     colorScheme: ColorScheme.light(
       primary: AppColors.primary,
       surface: AppColors.background,
       onPrimary: AppColors.onPrimary,
+      error: AppColors.error,
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.primary,
       foregroundColor: AppColors.onPrimary,
     ),
     textTheme: TextTheme(
+      displayMedium: AppTextStyles.displayMedium,
       displayLarge: AppTextStyles.headline1,
       bodyLarge: AppTextStyles.bodyText1,
+      labelLarge: AppTextStyles.buttonText,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
