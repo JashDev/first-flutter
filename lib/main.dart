@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_example/core/config/service_locator.dart';
 import 'package:login_example/core/theme/app_theme.dart';
+import 'package:login_example/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:login_example/features/auth/presentation/blocs/login/login_bloc.dart';
 import 'package:login_example/features/shared/presentation/blocs/theme/theme_cubit.dart';
 import 'core/app_router.dart';
+import 'core/config/app_lycicle_handler.dart';
 import 'core/config/environment_config.dart';
 
 void main() async {
@@ -28,16 +30,40 @@ class BlocProviders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
+      BlocProvider(create: (context) => getIt<AuthBloc>()),
       BlocProvider(create: (context) => getIt<LoginBloc>()),
       BlocProvider(create: (context) => getIt<ThemeCubit>()),
     ], child: MyApp());
   }
 }
 
-class MyApp extends StatelessWidget {
-  final navigatorKey = getIt<GlobalKey<NavigatorState>>();
+class MyApp extends StatefulWidget {
 
   MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+}
+
+class _MyAppState extends State<MyApp> {
+  late AppLifecycleHandler _lifecycleHandler;
+  final navigatorKey = getIt<GlobalKey<NavigatorState>>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _lifecycleHandler = AppLifecycleHandler(this.navigatorKey.currentContext!);
+      _lifecycleHandler.startObserving();
+    });
+  }
+
+  @override
+  void dispose() {
+    _lifecycleHandler.stopObserving();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

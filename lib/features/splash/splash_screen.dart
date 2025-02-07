@@ -16,7 +16,7 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToLogin() async {
-    await Future.delayed(const Duration(seconds: 3)); // Simula la carga
+    await Future.delayed(const Duration(seconds: 1)); // Simula la carga
     if (mounted) {
       context.goNamed('login');
     }
@@ -25,16 +25,16 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      // backgroundColor: Colors.blue,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Icon(Icons.flutter_dash, size: 100, color: Colors.white),
+            Icon(Icons.flutter_dash, size: 100,),
             SizedBox(height: 20),
             Text(
               'Bienvenido a Flutter App',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+              // style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ],
         ),

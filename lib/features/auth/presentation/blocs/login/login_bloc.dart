@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:login_example/core/utils/loader.dart';
 import '../../../domain/login_usercase.dart';
 import 'login_event.dart';
@@ -6,6 +7,8 @@ import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginUseCase loginUseCase;
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  // final void Function(String token) onAuthenticated;
 
   LoginBloc({required this.loginUseCase}) : super(LoginInitial()) {
     on<LoginButtonPressed>((event, emit) async {
@@ -24,9 +27,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
 
       try {
-        final success = await loginUseCase.execute(event.email, event.password);
-        if (success) {
-          emit(LoginSuccess());
+        final userLogged = await loginUseCase.execute(event.email, event.password);
+        if (userLogged != null) {
+          // await secureStorage.write(key: 'idToken', value: userLogged.idToken);
+          // onAuthenticated(userLogged.idToken);
+          emit(LoginSuccess(token:  userLogged.idToken));
         } else {
           emit(LoginValidationFailed(
               emailError: 'Email incorrecto',
