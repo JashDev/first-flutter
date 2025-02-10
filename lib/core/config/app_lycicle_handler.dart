@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/auth/presentation/blocs/auth/auth_bloc.dart';
-import '../../features/auth/presentation/blocs/auth/auth_state.dart';
+import 'package:login_example/features/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:login_example/features/auth/presentation/blocs/auth/auth_state.dart';
+import 'package:login_example/main.dart';
 
 class AppLifecycleHandler with WidgetsBindingObserver {
-
   // final GlobalKey<NavigatorState> navigatorKey = getIt<GlobalKey<NavigatorState>>();
   final BuildContext context;
   DateTime? _backgroundTimestamp;
@@ -36,7 +36,7 @@ class AppLifecycleHandler with WidgetsBindingObserver {
   void _onAppSuspended() {
     _backgroundTimestamp = DateTime.now();
     _lastRoute = GoRouter.of(context).routeInformationProvider.value.location;
-    print('last ROute $_lastRoute');
+    logger.debug('last ROute $_lastRoute');
     _startSuspensionTimer();
   }
 
@@ -54,7 +54,7 @@ class AppLifecycleHandler with WidgetsBindingObserver {
   void _startSuspensionTimer() {
     _timer = Timer(const Duration(minutes: 1), () {
       // Si la app sigue suspendida después de 1 minuto
-      print('La app ha estado suspendida por más de un minuto.');
+      logger.debug('La app ha estado suspendida por más de un minuto.');
     });
   }
 
@@ -62,9 +62,10 @@ class AppLifecycleHandler with WidgetsBindingObserver {
     final authState = BlocProvider.of<AuthBloc>(context).state;
 
     if (authState is AuthAuthenticated) {
-      _navigateToPinScreen();  // Si está autenticado, mostrar la pantalla de PIN
+      _navigateToPinScreen(); // Si está autenticado, mostrar la pantalla de PIN
     } else {
-      print('Usuario no autenticado, no se mostrará la pantalla de PIN.');
+      logger
+          .debug('Usuario no autenticado, no se mostrará la pantalla de PIN.');
     }
   }
 

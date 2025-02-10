@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:login_example/core/widgets/lottie_view.dart';
+import 'package:login_example/main.dart';
 
 class Loader {
   static final Loader _instance = Loader._internal();
@@ -19,15 +20,14 @@ class Loader {
     final overlayState = navigatorKey.currentState?.overlay;
 
     if (overlayState == null) {
-      debugPrint('Error: No Overlay widget found.');
+      logger.error('Error: No Overlay widget found.');
       return;
     }
 
     _overlayEntry = OverlayEntry(
       builder: (_) => Container(
-        color: Colors.black.withAlpha(125),
-        child: LottieView(lottiePath: 'assets/lottie/preloader_white.json')
-      ),
+          color: Colors.black.withAlpha(125),
+          child: LottieView(lottiePath: 'assets/lottie/preloader_white.json')),
     );
 
     overlayState.insert(_overlayEntry);

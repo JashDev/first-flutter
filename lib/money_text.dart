@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:login_example/main.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,16 +32,17 @@ class CurrencyInputExample extends StatefulWidget {
 
 class _CurrencyInputExampleState extends State<CurrencyInputExample> {
   final TextEditingController _controller = TextEditingController();
-  String selectedLocale = 'en_US';  // Locale por defecto
+  String selectedLocale = 'en_US'; // Locale por defecto
   CurrencyTextInputFormatter _formatter = CurrencyTextInputFormatter.currency();
 
   @override
   void initState() {
     super.initState();
     _formatter = CurrencyTextInputFormatter.currency(
-      locale: selectedLocale,     // Cambia el locale aquí
-      decimalDigits: _getDecimalPresicion(selectedLocale),           // Número de decimales
-      symbol: _getCurrencySymbol(selectedLocale),  // Símbolo de moneda
+      locale: selectedLocale, // Cambia el locale aquí
+      decimalDigits:
+          _getDecimalPresicion(selectedLocale), // Número de decimales
+      symbol: _getCurrencySymbol(selectedLocale), // Símbolo de moneda
     );
   }
 
@@ -52,9 +54,7 @@ class _CurrencyInputExampleState extends State<CurrencyInputExample> {
         TextField(
           controller: _controller,
           keyboardType: TextInputType.number,
-          inputFormatters: [
-            _formatter
-          ],
+          inputFormatters: [_formatter],
           decoration: const InputDecoration(
             labelText: 'Ingrese un monto',
             hintText: 'Ej: \$10,000.34',
@@ -66,11 +66,11 @@ class _CurrencyInputExampleState extends State<CurrencyInputExample> {
         // Botón para obtener el valor limpio (sin formato)
         ElevatedButton(
           onPressed: () {
-
-            print(_formatter.getFormattedValue()); // $ 2,000
-            print(_formatter.getUnformattedValue()); // 2000.00
-            print(_formatter.format); // $ 2,000
-            print(_formatter.formatDouble(20.00)); // $ 20
+            logger.debug(_formatter.getFormattedValue()); // $ 2,000
+            logger
+                .debug(_formatter.getUnformattedValue().toString()); // 2000.00
+            logger.debug(_formatter.format.toString()); // $ 2,000
+            logger.debug(_formatter.formatDouble(20.00)); // $ 20
 
             // String rawValue = _controller.text.replaceAll(RegExp(r'[^0-9.]'), '');
             // double? numericValue = double.tryParse(rawValue) ?? 0.0;
@@ -86,13 +86,14 @@ class _CurrencyInputExampleState extends State<CurrencyInputExample> {
           onChanged: (String? newLocale) {
             setState(() {
               selectedLocale = newLocale!;
-               _formatter = CurrencyTextInputFormatter.currency(
-                locale: selectedLocale,     // Cambia el locale aquí
-                decimalDigits: _getDecimalPresicion(selectedLocale),           // Número de decimales
-                symbol: _getCurrencySymbol(selectedLocale),  // Símbolo de moneda
-                 name: '\$'
-              );
-              _controller.clear();  // Limpia el campo al cambiar de formato
+              _formatter = CurrencyTextInputFormatter.currency(
+                  locale: selectedLocale, // Cambia el locale aquí
+                  decimalDigits: _getDecimalPresicion(
+                      selectedLocale), // Número de decimales
+                  symbol:
+                      _getCurrencySymbol(selectedLocale), // Símbolo de moneda
+                  name: '\$');
+              _controller.clear(); // Limpia el campo al cambiar de formato
             });
           },
           items: <String>['en_US', 'es_ES', 'es_AR', 'pt_BR', 'es_CL', 'es_PE']
@@ -117,7 +118,7 @@ class _CurrencyInputExampleState extends State<CurrencyInputExample> {
       case 'es_CL':
         return '\$';
       // case 'es_PE':
-        // return 'S/';
+      // return 'S/';
       case 'pt_BR':
         return 'R\$';
       case 'en_US':
@@ -125,7 +126,7 @@ class _CurrencyInputExampleState extends State<CurrencyInputExample> {
         return '\$'; // Dólar estadounidense
     }
   }
-  
+
   int _getDecimalPresicion(String locale) {
     switch (locale) {
       case 'es_ES':

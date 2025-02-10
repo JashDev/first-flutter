@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:login_example/main.dart';
 
 import '../shared/widgets/g66_amount_input.dart';
 import '../shared/widgets/g66_material_text_form_field.dart';
 import '../shared/widgets/g66_material_text_input.dart';
 import '../shared/widgets/g66_selector_form_field.dart';
 import '../shared/widgets/g66_material_button.dart';
+
 class CurrencySettings {
   final String thousandSeparator;
   final String decimalSeparator;
   final int decimalPrecision;
 
   CurrencySettings({
-     this.thousandSeparator = ',',
-     this.decimalSeparator = '.',
-     this.decimalPrecision = 2,
+    this.thousandSeparator = ',',
+    this.decimalSeparator = '.',
+    this.decimalPrecision = 2,
   });
 
   @override
@@ -41,37 +43,37 @@ class _FormExampleState extends State<FormExample> {
 
   CurrencySettings _getCurrencySettings(String currency) {
     switch (currency.toUpperCase()) {
-      case 'CLP':  // Peso Chileno
+      case 'CLP': // Peso Chileno
         return CurrencySettings(
           thousandSeparator: ',',
           decimalSeparator: '',
           decimalPrecision: 0,
         );
-      case 'USD':  // Dólar Estadounidense
+      case 'USD': // Dólar Estadounidense
         return CurrencySettings(
           thousandSeparator: ',',
           decimalSeparator: '.',
           decimalPrecision: 2,
         );
-      case 'EUR':  // Euro
+      case 'EUR': // Euro
         return CurrencySettings(
           thousandSeparator: '.',
           decimalSeparator: ',',
           decimalPrecision: 2,
         );
-      case 'MXN':  // Peso Mexicano
+      case 'MXN': // Peso Mexicano
         return CurrencySettings(
           thousandSeparator: ',',
           decimalSeparator: '.',
           decimalPrecision: 2,
         );
-      case 'PEN':  // Sol Peruano
+      case 'PEN': // Sol Peruano
         return CurrencySettings(
           thousandSeparator: '.',
           decimalSeparator: ',',
           decimalPrecision: 2,
         );
-      default:  // Configuración por defecto
+      default: // Configuración por defecto
         return CurrencySettings(
           thousandSeparator: ',',
           decimalSeparator: '.',
@@ -79,6 +81,7 @@ class _FormExampleState extends State<FormExample> {
         );
     }
   }
+
   final List<CurrencyItem> _currencies = [
     CurrencyItem('USD', 'Dólar estadounidense', 1500.75, 'assets/flags/us.png'),
     CurrencyItem('EUR', 'Euro', 1200.00, 'assets/flags/eu.png'),
@@ -96,7 +99,7 @@ class _FormExampleState extends State<FormExample> {
     setState(() {
       _selectedCurrency = currencyCode;
       _currencySettings = _getCurrencySettings(currencyCode);
-       print('hanlde $_currencySettings');
+      logger.debug('hanlde $_currencySettings');
     });
   }
 
@@ -110,9 +113,9 @@ class _FormExampleState extends State<FormExample> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      print("Formulario válido");
+      logger.debug("Formulario válido");
     } else {
-      print("Formulario con errores");
+      logger.debug("Formulario con errores");
     }
     _submit();
   }
@@ -153,14 +156,18 @@ class _FormExampleState extends State<FormExample> {
                   await Future.delayed(const Duration(
                       seconds: 1)); // Simulación de llamada a API
                   if (value == "jash") {
-                    return CustomValidatorResponse(status: ValidationStatus.error, message: 'Username en uso');
+                    return CustomValidatorResponse(
+                        status: ValidationStatus.error,
+                        message: 'Username en uso');
                   }
-                  return CustomValidatorResponse(status: ValidationStatus.success, message: 'Username oki');
+                  return CustomValidatorResponse(
+                      status: ValidationStatus.success,
+                      message: 'Username oki');
                   // return null;
                 },
               ],
               onChanged: (value) {
-                print('username $value');
+                logger.debug('username $value');
               },
               onValidated: (isValid) {
                 setState(() {
@@ -180,7 +187,7 @@ class _FormExampleState extends State<FormExample> {
                 return null;
               },
               onChanged: (item) {
-                print('item selected $item');
+                logger.debug('item selected $item');
                 setState(() {
                   _itemSelected = item;
                 });
