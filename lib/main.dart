@@ -1,7 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:login_example/core/config/logger/app_logger.dart';
 import 'package:login_example/core/config/service_locator.dart';
 import 'package:login_example/core/theme/app_theme.dart';
 import 'package:login_example/features/auth/presentation/blocs/auth/auth_bloc.dart';
@@ -11,14 +11,21 @@ import 'core/app_router.dart';
 import 'core/config/app_lycicle_handler.dart';
 import 'core/config/environment_config.dart';
 
+var logger = AppLogger();
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // WidgetsFlutterBinding.ensureInitialized();
+
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   try {
     await EnvironmentConfig.loadEnv();
-    log('Archivo .env.${EnvironmentConfig.currentEnv} cargado correctamente.');
+    logger.debug(
+        'Archivo .env.${EnvironmentConfig.currentEnv} cargado correctamente.');
   } catch (e) {
-    debugPrint('Error al cargar el archivo .env: $e');
+    logger.error('Error al cargar el archivo .env: $e');
   }
   serviceLocatorInit();
   runApp(const BlocProviders());
@@ -38,12 +45,10 @@ class BlocProviders extends StatelessWidget {
 }
 
 class MyApp extends StatefulWidget {
-
   MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
-
 }
 
 class _MyAppState extends State<MyApp> {
@@ -53,10 +58,17 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    initialization();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _lifecycleHandler = AppLifecycleHandler(this.navigatorKey.currentContext!);
+      _lifecycleHandler =
+          AppLifecycleHandler(this.navigatorKey.currentContext!);
       _lifecycleHandler.startObserving();
     });
+  }
+
+  void initialization() async {
+    await Future.delayed(const Duration(seconds: 1));
+    FlutterNativeSplash.remove();
   }
 
   @override

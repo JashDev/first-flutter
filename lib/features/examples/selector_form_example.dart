@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:login_example/main.dart';
 
 import '../shared/widgets/g66_selector_form_field.dart';
-
 
 class SelectorFormExample extends StatefulWidget {
   const SelectorFormExample({super.key});
@@ -24,9 +24,9 @@ class _SelectorFormExampleState extends State<SelectorFormExample> {
     });
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      print('Moneda seleccionada: $_selectedCurrency');
+      logger.debug('Moneda seleccionada: $_selectedCurrency');
     } else {
-      print('Por favor selecciona una moneda.');
+      logger.debug('Por favor selecciona una moneda.');
     }
   }
 
@@ -62,7 +62,7 @@ class _SelectorFormExampleState extends State<SelectorFormExample> {
                 //   return null;
                 // },
                 onChanged: (value) {
-                  print('On change $value');
+                  logger.debug('On change $value');
                   setState(() {
                     _selectedCurrency = value;
                   });

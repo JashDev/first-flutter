@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:login_example/features/auth/presentation/blocs/login/login_bloc.dart';
 import 'package:login_example/features/shared/widgets/g66_material_button.dart';
 import 'package:login_example/features/shared/widgets/g66_material_text_form_field.dart';
+import 'package:login_example/main.dart';
 
 import 'blocs/auth/auth_bloc.dart';
 import 'blocs/auth/auth_event.dart';
@@ -176,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(width: 8),
                       GestureDetector(
                         onTap: () {
-                          debugPrint('ir a crear cueta');
+                          logger.debug('ir a crear cueta');
                         },
                         child: Text('Crear cuenta',
                             style: TextStyle(

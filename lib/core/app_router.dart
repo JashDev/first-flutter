@@ -5,6 +5,7 @@ import 'package:login_example/core/router/go_router_refresh_stream.dart';
 import 'package:login_example/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:login_example/features/examples/presentation/exchange_view.dart';
 import 'package:login_example/features/examples/presentation/form_example_screen.dart';
+import 'package:login_example/main.dart';
 
 import '../features/auth/presentation/blocs/auth/auth_state.dart';
 import '../features/auth/presentation/login_screen.dart';
@@ -40,7 +41,6 @@ final GoRouter router = GoRouter(
       name: 'exchange',
       builder: (context, state) => ExchangeView(),
     ),
-
     GoRoute(
       path: '/pin',
       name: 'pin',
@@ -56,7 +56,8 @@ final GoRouter router = GoRouter(
     final authState = context.read<AuthBloc>().state;
     final bool isLoggedIn = authState is AuthAuthenticated;
     final isGoingToLogin = state.fullPath == '/login';
-    print('ejecutar redirect logged => $isLoggedIn ---- $isGoingToLogin ${state.fullPath} => ${state.name}');
+    logger.debug(
+        'ejecutar redirect logged => $isLoggedIn ---- $isGoingToLogin ${state.fullPath} => ${state.name}');
 
     if (!isLoggedIn && !isGoingToLogin && state.fullPath != '/splash') {
       return '/login';

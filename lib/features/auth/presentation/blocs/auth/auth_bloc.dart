@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:login_example/features/auth/presentation/blocs/auth/auth_event.dart';
+import 'package:login_example/main.dart';
 
 import 'auth_state.dart';
-
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
@@ -27,10 +27,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onLoggedIn(LoggedIn event, Emitter<AuthState> emit) async {
     try {
       await secureStorage.write(key: 'auth_token', value: event.token);
-      print('on loggen in ${event.token}');
+      logger.debug('on loggen in ${event.token}');
       emit(AuthAuthenticated(token: event.token));
     } catch (e) {
-      print(e);
+      logger.error(e.toString());
     }
   }
 
