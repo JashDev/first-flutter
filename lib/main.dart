@@ -15,8 +15,10 @@ var logger = AppLogger();
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // WidgetsFlutterBinding.ensureInitialized();
+
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   try {
     await EnvironmentConfig.loadEnv();
@@ -65,9 +67,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initialization() async {
-    logger.debug('pausing....');
-    await Future.delayed(const Duration(seconds: 3));
-    logger.debug('unpaussing...');
+    await Future.delayed(const Duration(seconds: 1));
     FlutterNativeSplash.remove();
   }
 

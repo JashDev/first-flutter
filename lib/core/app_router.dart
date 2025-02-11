@@ -10,7 +10,7 @@ import 'package:login_example/main.dart';
 import '../features/auth/presentation/blocs/auth/auth_state.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/pin_screen.dart';
-// import '../features/splash/splash_screen.dart';
+import '../features/splash/splash_screen.dart';
 import 'config/service_locator.dart';
 
 final GlobalKey<NavigatorState> navigatorKey =
@@ -18,14 +18,14 @@ final GlobalKey<NavigatorState> navigatorKey =
 
 final GoRouter router = GoRouter(
   navigatorKey: navigatorKey,
-  initialLocation: '/login',
+  initialLocation: '/splash',
   refreshListenable: GoRouterRefreshStream(getIt<AuthBloc>().stream),
   routes: [
-    // GoRoute(
-    //   path: '/splash',
-    //   name: 'splash',
-    //   builder: (context, state) => SplashScreen(),
-    // ),
+    GoRoute(
+      path: '/splash',
+      name: 'splash',
+      builder: (context, state) => SplashScreen(),
+    ),
     GoRoute(
       path: '/login',
       name: 'login',
@@ -41,7 +41,6 @@ final GoRouter router = GoRouter(
       name: 'exchange',
       builder: (context, state) => ExchangeView(),
     ),
-
     GoRoute(
       path: '/pin',
       name: 'pin',
